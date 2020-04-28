@@ -1,0 +1,5 @@
+name: CerspiLib
+main: com.cerrealic.cerspilib.Cerspi
+version: 1.2
+api-version: 1.15
+author: cerrealic
