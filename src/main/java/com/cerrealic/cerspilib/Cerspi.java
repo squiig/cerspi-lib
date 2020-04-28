@@ -13,17 +13,17 @@ public final class Cerspi {
 		Context.logger = logger;
 	}
 
-	public static void registerCommand(CerspiCommand exec) {
-		String label = exec.getLabel();
-		PluginCommand command = Context.plugin.getCommand(label);
-		if (command == null) {
+	public static void registerCommand(CerspiCommand command) {
+		String label = command.getLabel();
+		PluginCommand pluginCommand = Context.plugin.getCommand(label);
+		if (pluginCommand == null) {
 			Context.logger.severe(String.format("Failed to register %s command!", label));
 			disablePlugin();
 			return;
 		}
 
-		command.setExecutor(exec);
-		command.setTabCompleter(exec);
+		pluginCommand.setExecutor(command);
+		pluginCommand.setTabCompleter(command);
 	}
 
 	public static void disablePlugin() {
