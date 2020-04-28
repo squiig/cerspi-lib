@@ -27,6 +27,10 @@ public final class Cerspi {
 		pluginCommand.setTabCompleter(completer);
 	}
 
+	public static void registerCommand(String label, CommandExecutor executor) {
+		registerCommand(label, executor, (TabCompleter) executor);
+	}
+
 	public static void disablePlugin() {
 		Context.server.getPluginManager().disablePlugin(Context.plugin);
 	}
