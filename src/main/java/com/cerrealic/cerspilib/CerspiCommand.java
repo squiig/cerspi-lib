@@ -7,7 +7,7 @@ import org.bukkit.command.TabCompleter;
 
 import java.util.List;
 
-abstract class CerspiCommand implements CommandExecutor, TabCompleter {
+public abstract class CerspiCommand implements CommandExecutor, TabCompleter {
 	public abstract String getLabel();
 
 	/**

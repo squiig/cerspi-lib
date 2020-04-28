@@ -6,14 +6,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public class Cerspi {
-	public void setContext(JavaPlugin plugin, Server server, Logger logger) {
+public final class Cerspi {
+	public static void setContext(JavaPlugin plugin, Server server, Logger logger) {
 		Context.plugin = plugin;
 		Context.server = server;
 		Context.logger = logger;
 	}
 
-	<T extends CerspiCommand> void registerCommand(T exec) {
+	public static <T extends CerspiCommand> void registerCommand(T exec) {
 		String label = exec.getLabel();
 		PluginCommand command = Context.plugin.getCommand(label);
 		if (command == null) {
@@ -26,11 +26,11 @@ public class Cerspi {
 		command.setTabCompleter(exec);
 	}
 
-	public void disablePlugin() {
+	public static void disablePlugin() {
 		Context.server.getPluginManager().disablePlugin(Context.plugin);
 	}
 
-	public boolean isSpigotServer() {
+	public static boolean isSpigotServer() {
 		return Context.server.getVersion().contains("Spigot");
 	}
 }
