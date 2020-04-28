@@ -4,11 +4,12 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public final class Cerspi {
+public abstract class Cerspi extends PluginBase {
 	public static void setContext(JavaPlugin plugin, Server server, Logger logger) {
 		Context.plugin = plugin;
 		Context.server = server;
