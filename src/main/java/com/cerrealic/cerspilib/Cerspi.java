@@ -13,7 +13,7 @@ public final class Cerspi {
 		Context.logger = logger;
 	}
 
-	public static <T extends CerspiCommand> void registerCommand(T exec) {
+	public static void registerCommand(CerspiCommand exec) {
 		String label = exec.getLabel();
 		PluginCommand command = Context.plugin.getCommand(label);
 		if (command == null) {
