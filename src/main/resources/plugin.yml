@@ -1,5 +1,0 @@
-name: ${project.name}
-main: com.cerrealic.cerspilib.Cerspi
-version: ${project.version}
-api-version: 1.15
-author: cerrealic
