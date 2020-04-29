@@ -37,7 +37,7 @@ public final class Format {
 	}
 
 	public static String money(double amount) {
-		return colorize(ChatColor.GREEN + String.format("%.2f", amount));
+		return colorize(ChatColor.GREEN + "$" + String.format("%.2f", amount));
 	}
 
 	public static String money(BigDecimal amount) {
