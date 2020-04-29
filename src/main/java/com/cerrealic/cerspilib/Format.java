@@ -55,7 +55,7 @@ public final class Format {
 		return colorize(ChatColor.YELLOW + StringUtils.capitalize(material.name().toLowerCase().replace('_', ' ')));
 	}
 
-	public static String item(ItemStack stack) {
+	public static String stack(ItemStack stack) {
 		if (stack == null) {
 			return colorize("NULL");
 		}
