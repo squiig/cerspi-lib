@@ -13,20 +13,14 @@ public final class Debug {
 		}
 
 		Format.stripColors = target instanceof ConsoleCommandSender;
-		target.sendRawMessage(Format.debug(message, formatArgs));
+		target.sendRawMessage(Log.prefix + Format.debug(message, formatArgs));
 	}
 
 	public static void error(String message, Object... formatArgs) {
-		if (!enabled) {
-			return;
-		}
 		info(Format.error(message, formatArgs));
 	}
 
 	public static void success(String message, Object... formatArgs) {
-		if (!enabled) {
-			return;
-		}
 		info(Format.success(message, formatArgs));
 	}
 }
