@@ -9,8 +9,8 @@ import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Cerspi extends PluginBase {
-	static JavaPlugin plugin;
-	static Server server;
+	public static JavaPlugin plugin;
+	public static Server server;
 
 	public static void setContext(JavaPlugin plugin, Server server) {
 		Cerspi.plugin = plugin;

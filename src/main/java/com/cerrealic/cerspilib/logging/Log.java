@@ -1,39 +1,32 @@
 package com.cerrealic.cerspilib.logging;
 
+import com.cerrealic.cerspilib.Cerspi;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversable;
 
 public final class Log {
 	public static Conversable target;
+	public static String prefix = "[" + Cerspi.plugin.getDescription().getName() + "] ";
 
-	public static void info(String message, Object... formatArgs) {
-		String formattedMessage = Format.info(message, formatArgs);
+	private static void log(String message) {
 		if (target == null) {
-			Bukkit.broadcastMessage(formattedMessage);
+			Bukkit.broadcastMessage(prefix + message);
 			return;
 		}
 
-		target.sendRawMessage(formattedMessage);
+		target.sendRawMessage(prefix + message);
+	}
+
+	public static void info(String message, Object... formatArgs) {
+		log(Format.info(message, formatArgs));
 	}
 
 	public static void error(String message, Object... formatArgs) {
-		String formattedMessage = Format.error(message, formatArgs);
-		if (target == null) {
-			Bukkit.broadcastMessage(formattedMessage);
-			return;
-		}
-
-		target.sendRawMessage(formattedMessage);
+		log(Format.error(message, formatArgs));
 	}
 
 	public static void success(String message, Object... formatArgs) {
-		String formattedMessage = Format.success(message, formatArgs);
-		if (target == null) {
-			Bukkit.broadcastMessage(formattedMessage);
-			return;
-		}
-
-		target.sendRawMessage(formattedMessage);
+		log(Format.success(message, formatArgs));
 	}
 }
 
