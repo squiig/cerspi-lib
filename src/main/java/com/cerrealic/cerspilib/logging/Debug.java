@@ -1,4 +1,4 @@
-package com.cerrealic.cerspilib;
+package com.cerrealic.cerspilib.logging;
 
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.Conversable;

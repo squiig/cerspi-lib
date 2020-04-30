@@ -1,4 +1,4 @@
-package com.cerrealic.cerspilib;
+package com.cerrealic.cerspilib.logging;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
