@@ -1,10 +1,12 @@
 package com.cerrealic.cerspilib;
 
 import com.cerrealic.cerspilib.logging.Debug;
+import com.cerrealic.cerspilib.logging.Log;
 import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +17,24 @@ public abstract class Cerspi extends PluginBase {
 	public static void setContext(JavaPlugin plugin, Server server) {
 		Cerspi.plugin = plugin;
 		Cerspi.server = server;
+	}
+
+	public static boolean assertPermission(Player player, String permission) {
+		if (player.hasPermission(permission)) {
+			return true;
+		}
+		Log.error("You don't have permission to use that command.");
+		return false;
+	}
+
+	public static boolean assertPermission(Player player, String... permissions) {
+		for (String p : permissions) {
+			if (player.hasPermission(p)) {
+				return true;
+			}
+		}
+		Log.error("You don't have permission to use that command. BLA");
+		return false;
 	}
 
 	public static void checkForUpdates(int resourceId) {
