@@ -1,12 +1,9 @@
 package com.cerrealic.cerspilib;
 
 import com.cerrealic.cerspilib.logging.Debug;
-import com.cerrealic.cerspilib.logging.Log;
 import org.bukkit.Server;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,28 +11,28 @@ public abstract class Cerspi extends PluginBase {
 	public static JavaPlugin plugin;
 	public static Server server;
 
-	public static void setContext(JavaPlugin plugin, Server server) {
+	public static void setContext(JavaPlugin plugin) {
 		Cerspi.plugin = plugin;
-		Cerspi.server = server;
+		Cerspi.server = plugin.getServer();
 	}
 
-	public static boolean assertPermission(Player player, String permission) {
-		if (player.hasPermission(permission)) {
-			return true;
-		}
-		Log.error("You don't have permission to use that command.");
-		return false;
-	}
+//	public static boolean assertPermission(Player player, String permission) {
+//		if (player.hasPermission(permission)) {
+//			return true;
+//		}
+//		Log.error("You don't have permission to use that command.");
+//		return false;
+//	}
 
-	public static boolean assertPermission(Player player, String... permissions) {
-		for (String p : permissions) {
-			if (player.hasPermission(p)) {
-				return true;
-			}
-		}
-		Log.error("You don't have permission to use that command. BLA");
-		return false;
-	}
+//	public static boolean assertPermission(Player player, String... permissions) {
+//		for (String p : permissions) {
+//			if (player.hasPermission(p)) {
+//				return true;
+//			}
+//		}
+//		Log.error("You don't have permission to use that command. BLA");
+//		return false;
+//	}
 
 	public static void checkForUpdates(int resourceId) {
 		UpdateCheck
@@ -63,20 +60,24 @@ public abstract class Cerspi extends PluginBase {
 				}).check();
 	}
 
-	public static void registerCommand(String label, CommandExecutor executor, TabCompleter completer) {
-		PluginCommand pluginCommand = plugin.getCommand(label);
-		if (pluginCommand == null) {
-			plugin.getLogger().severe(String.format("Failed to register %s command!", label));
-			disablePlugin();
-			return;
+	public static void registerListeners(Listener... listeners) {
+		for (Listener listener : listeners) {
+			server.getPluginManager().registerEvents(listener, plugin);
 		}
-
-		pluginCommand.setExecutor(executor);
-		pluginCommand.setTabCompleter(completer);
 	}
 
-	public static void registerCommand(String label, CommandExecutor executor) {
-		registerCommand(label, executor, (TabCompleter) executor);
+	public static void registerCommands(CerspiCommand... cerspiCommands) {
+		for (CerspiCommand cerspiCommand : cerspiCommands) {
+			PluginCommand pluginCommand = plugin.getCommand(cerspiCommand.getLabel());
+			if (pluginCommand == null) {
+				plugin.getLogger().severe(String.format("Failed to register /%s command!", cerspiCommand.getLabel()));
+				disablePlugin();
+				return;
+			}
+
+			pluginCommand.setExecutor(cerspiCommand);
+			pluginCommand.setTabCompleter(cerspiCommand.getTabCompleter());
+		}
 	}
 
 	public static void disablePlugin() {
