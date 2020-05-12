@@ -1,23 +1,53 @@
 package com.cerrealic.cerspilib.config;
 
+import com.cerrealic.cerspilib.Cerspi;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class CerspiPluginConfig {
-	protected ConfigNode<Boolean> debug = new ConfigNode<>("debug", false);
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
-	public CerspiPluginConfig(boolean debug) {
-		this.debug.setValue(debug);
-	}
+public class CerspiPluginConfig {
+	protected FileConfiguration fileConfiguration;
+	protected ConfigNode<Boolean> debugMode = new ConfigNode<>("debug", false);
+	protected ConfigNode<Boolean> updateChecking = new ConfigNode<>("check-for-updates", false);
 
 	public CerspiPluginConfig(FileConfiguration fileConfiguration) {
-		this.debug.setValue(fileConfiguration.getBoolean(debug.getPath(), debug.getDefaultValue()));
+		this.fileConfiguration = fileConfiguration;
+		reload(fileConfiguration);
 	}
 
-	public ConfigNode<Boolean> getDebug() {
-		return debug;
+	public void save() {
+		File file = new File(Cerspi.plugin.getDataFolder(), "config.yml");
+		try {
+			fileConfiguration.save(file);
+		} catch (IOException ex) {
+			Cerspi.plugin.getLogger().log(Level.SEVERE, "Could not save config to " + file, ex);
+		}
 	}
 
-	public void setDebug(boolean debug) {
-		this.debug.setValue(debug);
+	public void reload(FileConfiguration fileConfiguration) {
+		setDebugMode(fileConfiguration.getBoolean(debugMode.getPath(), debugMode.getDefaultValue()));
+		setUpdateChecking(fileConfiguration.getBoolean(updateChecking.getPath(), updateChecking.getDefaultValue()));
+	}
+
+	public boolean isDebugMode() {
+		return debugMode.getValue();
+	}
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode.setValue(debugMode);
+		fileConfiguration.set(this.debugMode.getPath(), debugMode);
+		save();
+	}
+
+	public boolean isUpdateChecking() {
+		return updateChecking.getValue();
+	}
+
+	public void setUpdateChecking(boolean updateChecking) {
+		this.updateChecking.setValue(updateChecking);
+		fileConfiguration.set(this.updateChecking.getPath(), updateChecking);
+		save();
 	}
 }
