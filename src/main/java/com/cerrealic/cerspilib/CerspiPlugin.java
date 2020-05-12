@@ -14,20 +14,27 @@ public abstract class CerspiPlugin extends JavaPlugin {
 		}
 
 		this.saveDefaultConfig();
-		loadConfig();
+		CerspiPluginConfig pluginConfig = initConfig();
+		if (pluginConfig != null) {
+			applyConfig(pluginConfig);
+		}
+	}
+
+	public Integer getResourceId() {
+		return null;
 	}
 
 	protected abstract CerspiPluginConfig initConfig();
 
-	public void loadConfig() {
-		CerspiPluginConfig pluginConfig = initConfig();
-		if (pluginConfig == null) {
-			return;
-		}
-
-		Debug.enabled = pluginConfig.getDebug().getValue();
+	public void applyConfig(CerspiPluginConfig pluginConfig) {
+		Debug.enabled = pluginConfig.isDebugMode();
 		if (Debug.enabled) {
 			getLogger().info("Debug mode is enabled.");
+		}
+
+		Integer resourceId = getResourceId();
+		if (pluginConfig.isUpdateChecking() && resourceId != null) {
+			Cerspi.checkForUpdates(resourceId);
 		}
 	}
 
