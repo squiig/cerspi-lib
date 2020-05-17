@@ -5,16 +5,40 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.logging.Level;
 
-public class CerspiPluginConfig {
-	protected FileConfiguration fileConfiguration;
+public abstract class CerspiPluginConfig {
+	private FileConfiguration fileConfiguration;
 	protected ConfigNode<Boolean> debugMode = new ConfigNode<>("debug", false);
 	protected ConfigNode<Boolean> updateChecking = new ConfigNode<>("check-for-updates", false);
+	private HashSet<ConfigNode> definedNodes;
 
 	public CerspiPluginConfig(FileConfiguration fileConfiguration) {
 		this.fileConfiguration = fileConfiguration;
-		reload(fileConfiguration);
+		loadFromFile();
+		this.definedNodes = getDefinedNodes();
+		definedNodes.add(debugMode);
+		definedNodes.add(updateChecking);
+		setFileDefaults();
+	}
+
+	public FileConfiguration getFileConfiguration() {
+		return fileConfiguration;
+	}
+
+	private void setFileDefaults() {
+		for (ConfigNode node : definedNodes) {
+			fileConfiguration.addDefault(node.getPath(), node.getDefaultValue());
+		}
+	}
+
+	protected abstract HashSet<ConfigNode> getDefinedNodes();
+
+	protected <T> void setNodeValue(ConfigNode<T> node, T value) {
+		node.setValue(value);
+		fileConfiguration.set(node.getPath(), value);
+		save();
 	}
 
 	public void save() {
@@ -26,28 +50,29 @@ public class CerspiPluginConfig {
 		}
 	}
 
-	public void reload(FileConfiguration fileConfiguration) {
-		setDebugMode(fileConfiguration.getBoolean(debugMode.getPath(), debugMode.getDefaultValue()));
-		setUpdateChecking(fileConfiguration.getBoolean(updateChecking.getPath(), updateChecking.getDefaultValue()));
+	protected void loadFromFile() {
+		for (ConfigNode node : definedNodes) {
+			setNodeValue(node, fileConfiguration.get(node.getPath(), node.getDefaultValue()));
+		}
+	}
+
+	public void reload() {
+		loadFromFile();
 	}
 
 	public boolean isDebugMode() {
 		return debugMode.getValue();
 	}
 
-	public void setDebugMode(boolean debugMode) {
-		this.debugMode.setValue(debugMode);
-		fileConfiguration.set(this.debugMode.getPath(), debugMode);
-		save();
+	public void setDebugMode(boolean isDebugMode) {
+		setNodeValue(debugMode, isDebugMode);
 	}
 
 	public boolean isUpdateChecking() {
 		return updateChecking.getValue();
 	}
 
-	public void setUpdateChecking(boolean updateChecking) {
-		this.updateChecking.setValue(updateChecking);
-		fileConfiguration.set(this.updateChecking.getPath(), updateChecking);
-		save();
+	public void setUpdateChecking(boolean isUpdateChecking) {
+		setNodeValue(updateChecking, isUpdateChecking);
 	}
 }
