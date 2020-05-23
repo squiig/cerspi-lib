@@ -16,6 +16,10 @@ public class Logger {
 		return target;
 	}
 
+	public void setTarget(Conversable target) {
+		this.target = target;
+	}
+
 	public String getPrefix() {
 		return prefix;
 	}
