@@ -2,6 +2,7 @@ package com.cerrealic.cerspilib.config;
 
 import com.cerrealic.cerspilib.Cerspi;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +14,10 @@ public abstract class CerspiPluginConfig {
 	protected ConfigNode<Boolean> debugMode = new ConfigNode<>("debug", false);
 	protected ConfigNode<Boolean> updateChecking = new ConfigNode<>("check-for-updates", false);
 	private HashSet<ConfigNode> definedNodes;
+	private JavaPlugin plugin;
 
-	public CerspiPluginConfig(FileConfiguration fileConfiguration) {
+	public CerspiPluginConfig(JavaPlugin plugin, FileConfiguration fileConfiguration) {
+		this.plugin = plugin;
 		this.fileConfiguration = fileConfiguration;
 		loadFromFile();
 		this.definedNodes = getDefinedNodes();
@@ -42,11 +45,11 @@ public abstract class CerspiPluginConfig {
 	}
 
 	public void saveToFile() {
-		File file = new File(Cerspi.plugin.getDataFolder(), "config.yml");
+		File file = new File(plugin.getDataFolder(), "config.yml");
 		try {
 			fileConfiguration.save(file);
 		} catch (IOException ex) {
-			Cerspi.plugin.getLogger().log(Level.SEVERE, "Could not save config to " + file, ex);
+			plugin.getLogger().log(Level.SEVERE, "Could not save config to " + file, ex);
 		}
 	}
 

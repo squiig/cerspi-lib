@@ -10,8 +10,6 @@ public abstract class CerspiPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		Cerspi.setContext(this);
-
 		if (!checkDependencies()) {
 			return;
 		}
@@ -35,16 +33,15 @@ public abstract class CerspiPlugin extends JavaPlugin {
 			getLogger().info("Debug mode is enabled.");
 		}
 
-		Integer resourceId = getResourceId();
-		if (pluginConfig.isUpdateChecking() && resourceId != null) {
-			Cerspi.checkForUpdates(resourceId);
+		if (pluginConfig.isUpdateChecking()) {
+			Cerspi.checkForUpdates(this);
 		}
 	}
 
 	protected boolean checkDependencies() {
-		if (!Cerspi.isSpigotServer() && !Cerspi.isPaperServer()) {
+		if (!Cerspi.isSpigotServer(getServer()) && !Cerspi.isPaperServer(getServer())) {
 			getLogger().severe("You're probably running a CraftBukkit server. For this to plugin to work you need to switch to Spigot or PaperMC.");
-			Cerspi.disablePlugin();
+			Cerspi.disablePlugin(this);
 			return false;
 		}
 
@@ -54,6 +51,6 @@ public abstract class CerspiPlugin extends JavaPlugin {
 	public void setDebugMode(boolean enabled) {
 		Debug.enabled = enabled;
 		cerspiPluginConfig.setDebugMode(enabled);
-		Log.success("Debug " + (enabled ? "enabled" : "disabled") + ".");
+		Log.success("Debug " + (enabled ? "enabled" : "disabled") + ".", false);
 	}
 }
