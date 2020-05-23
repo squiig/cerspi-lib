@@ -1,43 +1,34 @@
 package com.cerrealic.cerspilib;
 
 import com.cerrealic.cerspilib.logging.Debug;
+import com.cerrealic.cerspilib.logging.Log;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Cerspi extends PluginBase {
-	public static JavaPlugin plugin;
-	public static Server server;
-
-	public static void setContext(JavaPlugin plugin) {
-		Cerspi.plugin = plugin;
-		Cerspi.server = plugin.getServer();
+	public static boolean assertPermissions(Player player, String... permissions) {
+		for (String p : permissions) {
+			if (player.hasPermission(p)) {
+				return true;
+			}
+		}
+		Log.error("You don't have permission to use that command.", false);
+		return false;
 	}
 
-//	public static boolean assertPermission(Player player, String permission) {
-//		if (player.hasPermission(permission)) {
-//			return true;
-//		}
-//		Log.error("You don't have permission to use that command.");
-//		return false;
-//	}
+	public static void checkForUpdates(CerspiPlugin plugin) {
+		if (plugin.getResourceId() == null) {
+			plugin.getLogger().info(String.format("Update check failed, %s does not have a resource ID.", plugin.getName()));
+			return;
+		}
 
-//	public static boolean assertPermission(Player player, String... permissions) {
-//		for (String p : permissions) {
-//			if (player.hasPermission(p)) {
-//				return true;
-//			}
-//		}
-//		Log.error("You don't have permission to use that command. BLA");
-//		return false;
-//	}
-
-	public static void checkForUpdates(int resourceId) {
 		UpdateCheck
 				.of(plugin)
-				.resourceId(resourceId)
+				.resourceId(plugin.getResourceId())
 				.handleResponse((versionResponse, version) -> {
 					String msg;
 					switch (versionResponse) {
@@ -60,18 +51,23 @@ public abstract class Cerspi extends PluginBase {
 				}).check();
 	}
 
-	public static void registerListeners(Listener... listeners) {
+	public static void registerListeners(JavaPlugin plugin, Listener... listeners) {
 		for (Listener listener : listeners) {
-			server.getPluginManager().registerEvents(listener, plugin);
+			plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 		}
 	}
 
-	public static void registerCommands(CerspiCommand... cerspiCommands) {
+	public static void registerCommands(JavaPlugin plugin, boolean failSeverely, CerspiCommand... cerspiCommands) {
 		for (CerspiCommand cerspiCommand : cerspiCommands) {
 			PluginCommand pluginCommand = plugin.getCommand(cerspiCommand.getLabel());
 			if (pluginCommand == null) {
-				plugin.getLogger().severe(String.format("Failed to register /%s command!", cerspiCommand.getLabel()));
-				disablePlugin();
+				if (failSeverely) {
+					plugin.getLogger().severe(String.format("Failed to register /%s command!", cerspiCommand.getLabel()));
+					disablePlugin(plugin);
+				}
+				else {
+					plugin.getLogger().warning(String.format("Failed to register /%s command!", cerspiCommand.getLabel()));
+				}
 				return;
 			}
 
@@ -80,15 +76,15 @@ public abstract class Cerspi extends PluginBase {
 		}
 	}
 
-	public static void disablePlugin() {
-		server.getPluginManager().disablePlugin(plugin);
+	public static void disablePlugin(JavaPlugin plugin) {
+		plugin.getServer().getPluginManager().disablePlugin(plugin);
 	}
 
-	public static boolean isSpigotServer() {
+	public static boolean isSpigotServer(Server server) {
 		return server.getVersion().contains("Spigot");
 	}
 
-	public static boolean isPaperServer() {
+	public static boolean isPaperServer(Server server) {
 		return server.getVersion().contains("Paper");
 	}
 }
