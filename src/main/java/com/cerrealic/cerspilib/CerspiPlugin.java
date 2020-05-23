@@ -2,9 +2,12 @@ package com.cerrealic.cerspilib;
 
 import com.cerrealic.cerspilib.config.CerspiPluginConfig;
 import com.cerrealic.cerspilib.logging.Debug;
+import com.cerrealic.cerspilib.logging.Log;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class CerspiPlugin extends JavaPlugin {
+	private CerspiPluginConfig cerspiPluginConfig;
+
 	@Override
 	public void onEnable() {
 		Cerspi.setContext(this);
@@ -14,9 +17,9 @@ public abstract class CerspiPlugin extends JavaPlugin {
 		}
 
 		this.saveDefaultConfig();
-		CerspiPluginConfig pluginConfig = initConfig();
-		if (pluginConfig != null) {
-			applyConfig(pluginConfig);
+		cerspiPluginConfig = initConfig();
+		if (cerspiPluginConfig != null) {
+			applyConfig(cerspiPluginConfig);
 		}
 	}
 
@@ -46,5 +49,11 @@ public abstract class CerspiPlugin extends JavaPlugin {
 		}
 
 		return true;
+	}
+
+	public void setDebugMode(boolean enabled) {
+		Debug.enabled = enabled;
+		cerspiPluginConfig.setDebugMode(enabled);
+		Log.success("Debug " + (enabled ? "enabled" : "disabled") + ".");
 	}
 }

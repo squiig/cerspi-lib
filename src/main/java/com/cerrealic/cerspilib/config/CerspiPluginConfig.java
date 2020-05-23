@@ -38,10 +38,10 @@ public abstract class CerspiPluginConfig {
 	protected <T> void setNodeValue(ConfigNode<T> node, T value) {
 		node.setValue(value);
 		fileConfiguration.set(node.getPath(), value);
-		save();
+		saveToFile();
 	}
 
-	public void save() {
+	public void saveToFile() {
 		File file = new File(Cerspi.plugin.getDataFolder(), "config.yml");
 		try {
 			fileConfiguration.save(file);
