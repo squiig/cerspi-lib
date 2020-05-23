@@ -1,18 +1,32 @@
 package com.cerrealic.cerspilib;
 
 import com.cerrealic.cerspilib.config.CerspiPluginConfig;
-import com.cerrealic.cerspilib.logging.Debug;
-import com.cerrealic.cerspilib.logging.Log;
+import com.cerrealic.cerspilib.logging.Debugger;
+import com.cerrealic.cerspilib.logging.Formatter;
+import com.cerrealic.cerspilib.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class CerspiPlugin extends JavaPlugin {
 	private CerspiPluginConfig cerspiPluginConfig;
+	private Logger logger;
+	private Debugger debugger;
+
+	public Logger getCerspiLogger() {
+		return logger;
+	}
+
+	public Debugger getDebugger() {
+		return debugger;
+	}
 
 	@Override
 	public void onEnable() {
 		if (!checkDependencies()) {
 			return;
 		}
+
+		logger = new Logger(null, "[" + getName() + "]");
+		debugger = new Debugger(logger, false, false);
 
 		this.saveDefaultConfig();
 		cerspiPluginConfig = initConfig();
@@ -28,8 +42,8 @@ public abstract class CerspiPlugin extends JavaPlugin {
 	protected abstract CerspiPluginConfig initConfig();
 
 	public void applyConfig(CerspiPluginConfig pluginConfig) {
-		Debug.enabled = pluginConfig.isDebugMode();
-		if (Debug.enabled) {
+		debugger.setEnabled(pluginConfig.isDebugMode());
+		if (debugger.isEnabled()) {
 			getLogger().info("Debug mode is enabled.");
 		}
 
@@ -49,8 +63,8 @@ public abstract class CerspiPlugin extends JavaPlugin {
 	}
 
 	public void setDebugMode(boolean enabled) {
-		Debug.enabled = enabled;
+		debugger.setEnabled(enabled);
 		cerspiPluginConfig.setDebugMode(enabled);
-		Log.success("Debug " + (enabled ? "enabled" : "disabled") + ".", false);
+		logger.log(new Formatter("Debug " + (enabled ? "enabled" : "disabled") + ".").stylizeSuccess().toString(), false);
 	}
 }
