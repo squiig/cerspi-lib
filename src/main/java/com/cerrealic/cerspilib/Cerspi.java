@@ -1,7 +1,6 @@
 package com.cerrealic.cerspilib;
 
-import com.cerrealic.cerspilib.logging.Debug;
-import com.cerrealic.cerspilib.logging.Log;
+import com.cerrealic.cerspilib.logging.Formatter;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -10,13 +9,13 @@ import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Cerspi extends PluginBase {
-	public static boolean assertPermissions(Player player, String... permissions) {
+	public static boolean assertPermissions(CerspiPlugin plugin, Player player, String... permissions) {
 		for (String p : permissions) {
 			if (player.hasPermission(p)) {
 				return true;
 			}
 		}
-		Log.error("You don't have permission to use that command.", false);
+		plugin.getCerspiLogger().log(new Formatter("You don't have permission to use that command.").stylizeError().toString(), false);
 		return false;
 	}
 
@@ -35,17 +34,17 @@ public abstract class Cerspi extends PluginBase {
 						case FOUND_NEW:
 							msg = "New version of the plugin was found: " + version;
 							plugin.getLogger().info(msg);
-							Debug.info(msg);
+							plugin.getDebugger().info(msg);
 							break;
 						case LATEST:
 							msg = "No updates found, this is the latest version.";
 							plugin.getLogger().info(msg);
-							Debug.info(msg);
+							plugin.getDebugger().info(msg);
 							break;
 						case UNAVAILABLE:
 							msg = "Unable to perform an update check.";
 							plugin.getLogger().info(msg);
-							Debug.info(msg);
+							plugin.getDebugger().info(msg);
 							break;
 					}
 				}).check();
