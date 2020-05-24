@@ -1,6 +1,5 @@
 package com.cerrealic.cerspilib.config;
 
-import com.cerrealic.cerspilib.Cerspi;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
