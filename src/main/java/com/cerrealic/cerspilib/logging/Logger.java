@@ -34,5 +34,29 @@ public class Logger {
 
 		target.sendRawMessage(prefix + message);
 	}
+
+	public void logInfo(String message, boolean broadcastIfTargetNull) {
+		log(new Formatter(message).stylizeInfo().toString(), broadcastIfTargetNull);
+	}
+
+	public void logInfo(String message) {
+		logInfo(message, false);
+	}
+
+	public void logError(String message, boolean broadcastIfTargetNull) {
+		log(new Formatter(message).stylizeError().toString(), broadcastIfTargetNull);
+	}
+
+	public void logError(String message) {
+		logError(message, false);
+	}
+
+	public void logSuccess(String message, boolean broadcastIfTargetNull) {
+		log(new Formatter(message).stylizeSuccess().toString(), broadcastIfTargetNull);
+	}
+
+	public void logSuccess(String message) {
+		logSuccess(message, false);
+	}
 }
 
