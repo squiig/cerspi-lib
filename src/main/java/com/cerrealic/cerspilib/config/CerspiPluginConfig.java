@@ -18,8 +18,8 @@ public abstract class CerspiPluginConfig {
 	public CerspiPluginConfig(JavaPlugin plugin, FileConfiguration fileConfiguration) {
 		this.plugin = plugin;
 		this.fileConfiguration = fileConfiguration;
-		loadFromFile();
 		this.definedNodes = getDefinedNodes();
+		loadFromFile();
 		definedNodes.add(debugMode);
 		definedNodes.add(updateChecking);
 		setFileDefaults();
