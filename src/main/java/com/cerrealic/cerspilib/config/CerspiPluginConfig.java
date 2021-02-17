@@ -9,19 +9,19 @@ import java.util.HashSet;
 import java.util.logging.Level;
 
 public abstract class CerspiPluginConfig {
-	private FileConfiguration fileConfiguration;
+	private final FileConfiguration fileConfiguration;
 	protected ConfigNode<Boolean> debugMode = new ConfigNode<>("debug", false);
 	protected ConfigNode<Boolean> updateChecking = new ConfigNode<>("check-for-updates", false);
-	private HashSet<ConfigNode> definedNodes;
-	private JavaPlugin plugin;
+	private final HashSet<ConfigNode> definedNodes;
+	private final JavaPlugin plugin;
 
 	public CerspiPluginConfig(JavaPlugin plugin, FileConfiguration fileConfiguration) {
 		this.plugin = plugin;
 		this.fileConfiguration = fileConfiguration;
 		this.definedNodes = getDefinedNodes();
-		loadFromFile();
 		definedNodes.add(debugMode);
 		definedNodes.add(updateChecking);
+		loadFromFile();
 		setFileDefaults();
 	}
 
@@ -37,6 +37,12 @@ public abstract class CerspiPluginConfig {
 
 	protected abstract HashSet<ConfigNode> getDefinedNodes();
 
+	protected void loadFromFile() {
+		for (ConfigNode node : definedNodes) {
+			setNodeValue(node, fileConfiguration.get(node.getPath(), node.getDefaultValue()));
+		}
+	}
+
 	protected <T> void setNodeValue(ConfigNode<T> node, T value) {
 		node.setValue(value);
 		fileConfiguration.set(node.getPath(), value);
@@ -49,12 +55,6 @@ public abstract class CerspiPluginConfig {
 			fileConfiguration.save(file);
 		} catch (IOException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Could not save config to " + file, ex);
-		}
-	}
-
-	protected void loadFromFile() {
-		for (ConfigNode node : definedNodes) {
-			setNodeValue(node, fileConfiguration.get(node.getPath(), node.getDefaultValue()));
 		}
 	}
 
