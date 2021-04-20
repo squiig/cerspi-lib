@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.cerrealic'
-version '3.3.5'
+version '3.3.6'
 
 sourceCompatibility = 1.8
 
@@ -38,5 +38,5 @@ repositories {
 }
 
 dependencies {
-	compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
+	compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
 }

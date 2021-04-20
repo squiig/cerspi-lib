@@ -25,7 +25,7 @@ public abstract class CerspiPlugin extends JavaPlugin {
 			return;
 		}
 
-		logger = new Logger(null, "[" + getName() + "]");
+		logger = new Logger(null, "[" + getName() + "] ");
 		debugger = new Debugger(logger, false, false);
 
 		this.saveDefaultConfig();
