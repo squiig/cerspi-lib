@@ -9,13 +9,23 @@ import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Cerspi extends PluginBase {
-	public static boolean assertPermissions(CerspiPlugin plugin, Player player, String... permissions) {
+	public static boolean assertPermissions(CerspiPlugin plugin, Player player, boolean requireAll, String... permissions) {
+		String noPermissionMessage = new Formatter("You don't have permission to do that.").stylizeError().toString();
+
 		for (String p : permissions) {
-			if (player.hasPermission(p)) {
-				return true;
+			if (requireAll) {
+				if (!player.hasPermission(p)) {
+					plugin.getCerspiLogger().log(player, noPermissionMessage, false);
+					return false;
+				}
+			} else {
+				if (player.hasPermission(p)) {
+					return true;
+				}
 			}
 		}
-		plugin.getCerspiLogger().log(new Formatter("You don't have permission to use that command.").stylizeError().toString(), false);
+
+		plugin.getCerspiLogger().log(player, noPermissionMessage, false);
 		return false;
 	}
 
