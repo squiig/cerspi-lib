@@ -22,9 +22,9 @@ public class Debugger {
 		this.enabled = enabled;
 	}
 
-	public void info(String message, Object... formatArgs) {
+	public Debugger info(String message, Object... formatArgs) {
 		if (!enabled) {
-			return;
+			return this;
 		}
 
 		logger.log(new Formatter(message)
@@ -33,21 +33,24 @@ public class Debugger {
 						.stripColorsIf(logger.getTarget() instanceof ConsoleCommandSender)
 						.toString(),
 				broadcastIfTargetNull);
+		return this;
 	}
 
-	public void error(String message, Object... formatArgs) {
+	public Debugger error(String message, Object... formatArgs) {
 		if (!enabled) {
-			return;
+			return this;
 		}
 
 		info(new Formatter(message).format(formatArgs).stylizeError().toString());
+		return this;
 	}
 
-	public void success(String message, Object... formatArgs) {
+	public Debugger success(String message, Object... formatArgs) {
 		if (!enabled) {
-			return;
+			return this;
 		}
 
 		info(new Formatter(message).format(formatArgs).stylizeSuccess().toString());
+		return this;
 	}
 }
