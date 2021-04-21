@@ -12,11 +12,11 @@ public abstract class CerspiPlugin extends JavaPlugin {
 	private Debugger debugger;
 
 	public Logger getCerspiLogger() {
-		return logger;
+		return logger == null ? new Logger(this, null, "[" + getName() + "] ") : logger;
 	}
 
 	public Debugger getDebugger() {
-		return debugger;
+		return debugger == null ? new Debugger(logger, false, false) : debugger;
 	}
 
 	@Override
@@ -25,8 +25,8 @@ public abstract class CerspiPlugin extends JavaPlugin {
 			return;
 		}
 
-		logger = new Logger(null, "[" + getName() + "] ");
-		debugger = new Debugger(logger, false, false);
+		logger = getCerspiLogger();
+		debugger = getDebugger();
 
 		this.saveDefaultConfig();
 		cerspiPluginConfig = initConfig();
@@ -65,6 +65,7 @@ public abstract class CerspiPlugin extends JavaPlugin {
 	public void setDebugMode(boolean enabled) {
 		debugger.setEnabled(enabled);
 		cerspiPluginConfig.setDebugMode(enabled);
+
 		logger.log(new Formatter("Debug " + (enabled ? "enabled" : "disabled") + ".").stylizeSuccess().toString(), false);
 	}
 }

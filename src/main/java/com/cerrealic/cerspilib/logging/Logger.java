@@ -1,13 +1,20 @@
 package com.cerrealic.cerspilib.logging;
 
+import com.cerrealic.cerspilib.CerspiPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversable;
 
-public class Logger {
-	private Conversable target;
-	private String prefix;
+import java.util.logging.Level;
 
-	public Logger(Conversable target, String prefix) {
+public class Logger {
+	private final CerspiPlugin plugin;
+	private final Conversable originalTarget;
+	private Conversable target;
+	private final String prefix;
+
+	public Logger(CerspiPlugin plugin, Conversable target, String prefix) {
+		this.plugin = plugin;
+		this.originalTarget = target;
 		this.target = target;
 		this.prefix = prefix;
 	}
@@ -16,23 +23,36 @@ public class Logger {
 		return target;
 	}
 
-	public void setTarget(Conversable target) {
+	public Logger setTarget(Conversable target) {
 		this.target = target;
+		return this;
+	}
+
+	public Logger resetTarget() {
+		this.target = originalTarget;
+		return this;
 	}
 
 	public String getPrefix() {
 		return prefix;
 	}
 
-	public void log(String message, boolean broadcastIfTargetNull) {
+	public void log(Conversable target, String message, boolean broadcastIfTargetNull) {
 		if (target == null) {
 			if (broadcastIfTargetNull) {
 				Bukkit.broadcastMessage(prefix + message);
+				return;
 			}
+
+			plugin.getLogger().info(prefix + message);
 			return;
 		}
 
 		target.sendRawMessage(prefix + message);
+	}
+
+	public void log(String message, boolean broadcastIfTargetNull) {
+		log(target, message, broadcastIfTargetNull);
 	}
 
 	public void logInfo(String message, boolean broadcastIfTargetNull) {

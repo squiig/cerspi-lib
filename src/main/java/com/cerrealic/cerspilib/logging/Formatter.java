@@ -12,17 +12,30 @@ public class Formatter {
 	private String text;
 	private char colorChar;
 	private String currencyUnit;
+	private final ColorSettings colorSettings;
 
-	public Formatter(String text, char colorChar, String currencyUnit) {
+	private static final ColorSettings DEFAULT_COLORS = new ColorSettings(ChatColor.GOLD, ChatColor.RED,
+			ChatColor.GREEN, ChatColor.AQUA, ChatColor.GREEN, ChatColor.YELLOW);
+
+	public Formatter(String text, char colorChar, String currencyUnit, ColorSettings colorSettings) {
 		this.text = text;
 		this.colorChar = colorChar;
 		this.currencyUnit = currencyUnit;
+		this.colorSettings = colorSettings;
+	}
+
+	public Formatter(String text, ColorSettings colorSettings) {
+		this.text = text;
+		this.colorChar = '&';
+		this.currencyUnit = "$";
+		this.colorSettings = colorSettings;
 	}
 
 	public Formatter(String text) {
 		this.text = text;
 		this.colorChar = '&';
 		this.currencyUnit = "$";
+		this.colorSettings = DEFAULT_COLORS;
 	}
 
 	@Override
@@ -53,34 +66,34 @@ public class Formatter {
 	}
 
 	public Formatter stylizeInfo() {
-		text = ChatColor.GOLD + text;
+		text = colorSettings.getInfoColor() + text;
 		return colorize();
 	}
 
 	public Formatter stylizeDebug() {
-		text = ChatColor.LIGHT_PURPLE + "[DEBUG] " + ChatColor.DARK_PURPLE + text;
+		text = ChatColor.LIGHT_PURPLE + Debugger.PREFIX + ChatColor.DARK_PURPLE + text;
 		return colorize();
 	}
 
 	public Formatter stylizeError() {
-		text = ChatColor.RED + text;
+		text = colorSettings.getErrorColor() + text;
 		return colorize();
 	}
 
 	public Formatter stylizeSuccess() {
-		text = ChatColor.GREEN + text;
+		text = colorSettings.getSuccessColor() + text;
 		return colorize();
 	}
 
-	public static String stylizeAmount(int amount) {
-		return ChatColor.AQUA + Integer.toString(amount);
+	public String stylizeAmount(int amount) {
+		return colorSettings.getAmountColor() + Integer.toString(amount);
 	}
 
-	public static String stylizeMoney(String currencyUnit, double amount) {
-		return ChatColor.GREEN + currencyUnit + String.format("%.2f", amount);
+	public String stylizeMoney(String currencyUnit, double amount) {
+		return colorSettings.getMoneyColor() + currencyUnit + String.format("%.2f", amount);
 	}
 
-	public static String stylizeMoney(String currencyUnit, BigDecimal amount) {
+	public String stylizeMoney(String currencyUnit, BigDecimal amount) {
 		if (amount == null) {
 			return "NULL";
 		}
@@ -88,15 +101,15 @@ public class Formatter {
 		return stylizeMoney(currencyUnit, amount.doubleValue());
 	}
 
-	public static String stylizeMaterial(Material material) {
+	public String stylizeMaterial(Material material) {
 		if (material == null) {
 			return "NULL";
 		}
 
-		return ChatColor.YELLOW + StringUtils.capitalize(material.name().toLowerCase().replace('_', ' '));
+		return colorSettings.getMaterialColor() + StringUtils.capitalize(material.name().toLowerCase().replace('_', ' '));
 	}
 
-	public static String stylizeStack(ItemStack stack) {
+	public String stylizeStack(ItemStack stack) {
 		if (stack == null) {
 			return "NULL";
 		}

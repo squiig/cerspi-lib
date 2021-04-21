@@ -1,13 +1,12 @@
 package com.cerrealic.cerspilib.logging;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 
 public class Debugger {
-	private static final String PREFIX = "[DEBUG]";
-	private Logger logger;
+	public static final String PREFIX = "[DEBUG] ";
+	private final Logger logger;
 	private boolean enabled;
-	private boolean broadcastIfTargetNull;
+	private final boolean broadcastIfTargetNull;
 
 	public Debugger(Logger logger, boolean enabled, boolean broadcastIfTargetNull) {
 		this.logger = logger;
@@ -28,7 +27,7 @@ public class Debugger {
 			return;
 		}
 
-		logger.log(ChatColor.LIGHT_PURPLE + PREFIX + new Formatter(message)
+		logger.log(new Formatter(message)
 						.format(formatArgs)
 						.stylizeDebug()
 						.stripColorsIf(logger.getTarget() instanceof ConsoleCommandSender)
