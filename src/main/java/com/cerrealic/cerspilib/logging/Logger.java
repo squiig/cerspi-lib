@@ -37,46 +37,54 @@ public class Logger {
 		return prefix;
 	}
 
-	public void log(Conversable target, String message, boolean broadcastIfTargetNull) {
+	public Logger log(Conversable target, String message, boolean broadcastIfTargetNull) {
 		if (target == null) {
 			if (broadcastIfTargetNull) {
 				Bukkit.broadcastMessage(prefix + message);
-				return;
+				return this;
 			}
 
 			plugin.getLogger().info(prefix + message);
-			return;
+			return this;
 		}
 
 		target.sendRawMessage(prefix + message);
+		return this;
 	}
 
-	public void log(String message, boolean broadcastIfTargetNull) {
+	public Logger log(String message, boolean broadcastIfTargetNull) {
 		log(target, message, broadcastIfTargetNull);
+		return this;
 	}
 
-	public void logInfo(String message, boolean broadcastIfTargetNull) {
+	public Logger logInfo(String message, boolean broadcastIfTargetNull) {
 		log(new Formatter(message).stylizeInfo().toString(), broadcastIfTargetNull);
+		return this;
 	}
 
-	public void logInfo(String message) {
+	public Logger logInfo(String message) {
 		logInfo(message, false);
+		return this;
 	}
 
-	public void logError(String message, boolean broadcastIfTargetNull) {
+	public Logger logError(String message, boolean broadcastIfTargetNull) {
 		log(new Formatter(message).stylizeError().toString(), broadcastIfTargetNull);
+		return this;
 	}
 
-	public void logError(String message) {
+	public Logger logError(String message) {
 		logError(message, false);
+		return this;
 	}
 
-	public void logSuccess(String message, boolean broadcastIfTargetNull) {
+	public Logger logSuccess(String message, boolean broadcastIfTargetNull) {
 		log(new Formatter(message).stylizeSuccess().toString(), broadcastIfTargetNull);
+		return this;
 	}
 
-	public void logSuccess(String message) {
+	public Logger logSuccess(String message) {
 		logSuccess(message, false);
+		return this;
 	}
 }
 
