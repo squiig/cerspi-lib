@@ -9,33 +9,29 @@ import java.math.BigDecimal;
 
 public class Formatter {
 	private static final String UNDEFINED = "&4&lNULL&r";
-	private String text;
-	private char colorChar;
-	private String currencyUnit;
-	private final ColorSettings colorSettings;
-
+	private static final char DEFAULT_COLOR_CHAR = '&';
+	private static final String DEFAULT_CURRENCY_UNIT = "$";
 	private static final ColorSettings DEFAULT_COLORS = new ColorSettings(ChatColor.GOLD, ChatColor.RED,
 			ChatColor.GREEN, ChatColor.AQUA, ChatColor.GREEN, ChatColor.YELLOW);
+
+	private String text;
+	private final char colorChar;
+	private final String currencyUnit;
+	private final ColorSettings colorSettings;
 
 	public Formatter(String text, char colorChar, String currencyUnit, ColorSettings colorSettings) {
 		this.text = text;
 		this.colorChar = colorChar;
 		this.currencyUnit = currencyUnit;
-		this.colorSettings = colorSettings;
+		this.colorSettings = colorSettings == null ? DEFAULT_COLORS : colorSettings;
 	}
 
 	public Formatter(String text, ColorSettings colorSettings) {
-		this.text = text;
-		this.colorChar = '&';
-		this.currencyUnit = "$";
-		this.colorSettings = colorSettings;
+		this(text, DEFAULT_COLOR_CHAR, DEFAULT_CURRENCY_UNIT, colorSettings);
 	}
 
 	public Formatter(String text) {
-		this.text = text;
-		this.colorChar = '&';
-		this.currencyUnit = "$";
-		this.colorSettings = DEFAULT_COLORS;
+		this(text, DEFAULT_COLOR_CHAR, DEFAULT_CURRENCY_UNIT, DEFAULT_COLORS);
 	}
 
 	@Override
@@ -89,16 +85,20 @@ public class Formatter {
 		return colorSettings.getAmountColor() + Integer.toString(amount);
 	}
 
-	public String stylizeMoney(String currencyUnit, double amount) {
+	public String stylizeMoney(double amount, String currencyUnit) {
 		return colorSettings.getMoneyColor() + currencyUnit + String.format("%.2f", amount);
 	}
 
-	public String stylizeMoney(String currencyUnit, BigDecimal amount) {
+	public String stylizeMoney(double amount) {
+		return stylizeMoney(amount, currencyUnit);
+	}
+
+	public String stylizeMoney(BigDecimal amount, String currencyUnit) {
 		if (amount == null) {
 			return "NULL";
 		}
 
-		return stylizeMoney(currencyUnit, amount.doubleValue());
+		return stylizeMoney(amount.doubleValue(), currencyUnit);
 	}
 
 	public String stylizeMaterial(Material material) {
