@@ -3,6 +3,7 @@ package com.cerrealic.cerspilib.logging;
 import com.cerrealic.cerspilib.CerspiPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversable;
+import org.bukkit.entity.Player;
 
 import java.util.logging.Level;
 
@@ -11,12 +12,18 @@ public class Logger {
 	private final Conversable originalTarget;
 	private Conversable target;
 	private final String prefix;
+	private final ColorSettings colorSettings;
 
-	public Logger(CerspiPlugin plugin, Conversable target, String prefix) {
+	public Logger(CerspiPlugin plugin, Conversable target, String prefix, ColorSettings colorSettings) {
 		this.plugin = plugin;
 		this.originalTarget = target;
 		this.target = target;
-		this.prefix = prefix;
+		this.prefix = new Formatter(prefix, colorSettings).colorize().toString();
+		this.colorSettings = colorSettings;
+	}
+
+	public Logger(CerspiPlugin plugin, Conversable target, String prefix) {
+		this(plugin, target, prefix, null);
 	}
 
 	public Conversable getTarget() {
@@ -44,11 +51,11 @@ public class Logger {
 				return this;
 			}
 
-			plugin.getLogger().info(prefix + message);
+			plugin.getLogger().info(message);
 			return this;
 		}
 
-		target.sendRawMessage(prefix + message);
+		target.sendRawMessage((target instanceof Player) ? prefix + message : message);
 		return this;
 	}
 
@@ -58,7 +65,7 @@ public class Logger {
 	}
 
 	public Logger logInfo(String message, boolean broadcastIfTargetNull) {
-		log(new Formatter(message).stylizeInfo().toString(), broadcastIfTargetNull);
+		log(new Formatter(message, colorSettings).stylizeInfo().toString(), broadcastIfTargetNull);
 		return this;
 	}
 
@@ -68,7 +75,7 @@ public class Logger {
 	}
 
 	public Logger logError(String message, boolean broadcastIfTargetNull) {
-		log(new Formatter(message).stylizeError().toString(), broadcastIfTargetNull);
+		log(new Formatter(message, colorSettings).stylizeError().toString(), broadcastIfTargetNull);
 		return this;
 	}
 
@@ -78,7 +85,7 @@ public class Logger {
 	}
 
 	public Logger logSuccess(String message, boolean broadcastIfTargetNull) {
-		log(new Formatter(message).stylizeSuccess().toString(), broadcastIfTargetNull);
+		log(new Formatter(message, colorSettings).stylizeSuccess().toString(), broadcastIfTargetNull);
 		return this;
 	}
 
