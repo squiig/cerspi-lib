@@ -65,7 +65,9 @@ public abstract class CerspiPlugin extends JavaPlugin {
 	public void setDebugMode(boolean enabled) {
 		debugger.setEnabled(enabled);
 		cerspiPluginConfig.setDebugMode(enabled);
+	}
 
-		logger.log(new Formatter("Debug " + (enabled ? "enabled" : "disabled") + ".").stylizeSuccess().toString(), false);
+	public boolean isInDebugMode() {
+		return debugger.isEnabled();
 	}
 }
