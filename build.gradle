@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.cerrealic'
-version '3.3.9'
+version '3.4.0'
 
 sourceCompatibility = 1.8
 
