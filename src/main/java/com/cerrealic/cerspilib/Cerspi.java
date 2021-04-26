@@ -25,6 +25,9 @@ public abstract class Cerspi extends PluginBase {
 			}
 		}
 
+		if (requireAll)
+			return true;
+
 		plugin.getCerspiLogger().log(player, noPermissionMessage, false);
 		return false;
 	}
