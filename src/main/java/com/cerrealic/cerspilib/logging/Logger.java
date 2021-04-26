@@ -26,6 +26,10 @@ public class Logger {
 		this(plugin, target, prefix, null);
 	}
 
+	public ColorSettings getColorSettings() {
+		return colorSettings;
+	}
+
 	public Conversable getTarget() {
 		return target;
 	}

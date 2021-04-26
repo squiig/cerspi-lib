@@ -1,6 +1,7 @@
 package com.cerrealic.cerspilib.logging;
 
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.conversations.Conversable;
 
 public class Debugger {
 	public static final String PREFIX = "[DEBUG] ";
@@ -22,35 +23,55 @@ public class Debugger {
 		this.enabled = enabled;
 	}
 
-	public Debugger info(String message, Object... formatArgs) {
+	public Debugger info(Conversable target, String message, Object... formatArgs) {
 		if (!enabled) {
 			return this;
 		}
 
-		logger.log(new Formatter(message)
+		logger.setTarget(target)
+				.log(new Formatter(message, logger.getColorSettings())
 						.format(formatArgs)
 						.stylizeDebug()
-						.stripColorsIf(logger.getTarget() instanceof ConsoleCommandSender)
+						.stripColorsIf(target instanceof ConsoleCommandSender)
 						.toString(),
-				broadcastIfTargetNull);
+				broadcastIfTargetNull)
+			.resetTarget();
+		return this;
+	}
+
+	public Debugger info(String message, Object... formatArgs) {
+		return info(logger.getTarget(), message, formatArgs);
+	}
+
+	public Debugger error(Conversable target, String message, Object... formatArgs) {
+		if (!enabled) {
+			return this;
+		}
+
+		info(target, new Formatter(message, logger.getColorSettings())
+				.format(formatArgs)
+				.stylizeError()
+				.toString());
 		return this;
 	}
 
 	public Debugger error(String message, Object... formatArgs) {
+		return error(logger.getTarget(), message, formatArgs);
+	}
+
+	public Debugger success(Conversable target, String message, Object... formatArgs) {
 		if (!enabled) {
 			return this;
 		}
 
-		info(new Formatter(message).format(formatArgs).stylizeError().toString());
+		info(target, new Formatter(message, logger.getColorSettings())
+				.format(formatArgs)
+				.stylizeSuccess()
+				.toString());
 		return this;
 	}
 
 	public Debugger success(String message, Object... formatArgs) {
-		if (!enabled) {
-			return this;
-		}
-
-		info(new Formatter(message).format(formatArgs).stylizeSuccess().toString());
-		return this;
+		return success(logger.getTarget(), message, formatArgs);
 	}
 }
