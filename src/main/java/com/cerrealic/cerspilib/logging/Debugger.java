@@ -6,8 +6,9 @@ import org.bukkit.conversations.Conversable;
 public class Debugger {
 	public static final String PREFIX = "[DEBUG] ";
 	private final Logger logger;
-	private boolean enabled;
 	private final boolean broadcastIfTargetNull;
+	private boolean enabled;
+	private Conversable target;
 
 	public Debugger(Logger logger, boolean enabled, boolean broadcastIfTargetNull) {
 		this.logger = logger;
@@ -21,6 +22,11 @@ public class Debugger {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public Debugger setTarget(Conversable target) {
+		this.target = target;
+		return this;
 	}
 
 	public Debugger info(Conversable target, String message, Object... formatArgs) {
@@ -40,7 +46,7 @@ public class Debugger {
 	}
 
 	public Debugger info(String message, Object... formatArgs) {
-		return info(logger.getTarget(), message, formatArgs);
+		return info(target, message, formatArgs);
 	}
 
 	public Debugger error(Conversable target, String message, Object... formatArgs) {
@@ -56,7 +62,7 @@ public class Debugger {
 	}
 
 	public Debugger error(String message, Object... formatArgs) {
-		return error(logger.getTarget(), message, formatArgs);
+		return error(target, message, formatArgs);
 	}
 
 	public Debugger success(Conversable target, String message, Object... formatArgs) {
@@ -72,6 +78,18 @@ public class Debugger {
 	}
 
 	public Debugger success(String message, Object... formatArgs) {
-		return success(logger.getTarget(), message, formatArgs);
+		return success(target, message, formatArgs);
+	}
+
+	public Conversable getTarget() {
+		return target;
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
+	public boolean isBroadcastIfTargetNull() {
+		return broadcastIfTargetNull;
 	}
 }
